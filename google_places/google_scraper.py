@@ -39,19 +39,8 @@ class GooglePlacesScraper:
                 'google_id': google_id
             }
 
-            # Hours - This is working well from before
-            try:
-                hours_element = self.driver.find_element(By.CLASS_NAME, "t39EBf")
-                hours_text = hours_element.get_attribute('aria-label')
-                if hours_text:
-                    hours_dict = {}
-                    for day_hours in hours_text.split(';'):
-                        if ',' in day_hours and 'Hide' not in day_hours:
-                            day, hours = day_hours.split(',', 1)
-                            hours_dict[day.strip()] = hours.strip()
-                    details['hours'] = hours_dict
-            except NoSuchElementException:
-                details['hours'] = None
+            # Hours
+            details['hours'] = self._extract_hours()
 
             # Category
             try:
@@ -168,6 +157,111 @@ class GooglePlacesScraper:
 
         except Exception as e:
             logger.error(f"Error scraping place {original_name} ({google_id}): {str(e)}")
+            return None
+        
+    def _clean_hours_text(self, text: str) -> str:
+        """Clean up unicode characters and format hours text"""
+        # Remove unicode characters
+        text = text.replace('\u202f', ' ')
+        # Standardize various dash types to a simple hyphen
+        text = text.replace('–', '-').replace('—', '-')
+        # Remove extra spaces
+        text = re.sub(r'\s+', ' ', text).strip()
+        return text
+
+    def _extract_hours(self) -> dict:
+        """Extract hours with multiple fallback methods and cleaner formatting"""
+        try:
+            hours_dict = {}
+            
+            # Method 1: Try t39EBf class with aria-label (current working method)
+            try:
+                hours_element = self.driver.find_element(By.CLASS_NAME, "t39EBf")
+                hours_text = hours_element.get_attribute('aria-label')
+                if hours_text and ',' in hours_text:
+                    for day_hours in hours_text.split(';'):
+                        if ',' in day_hours and 'Hide' not in day_hours:
+                            day, hours = day_hours.split(',', 1)
+                            hours_dict[day.strip()] = self._clean_hours_text(hours.strip())
+                    if hours_dict:
+                        return hours_dict
+            except NoSuchElementException:
+                pass
+
+            # Method 2: Try finding the hours table directly
+            try:
+                table = self.driver.find_element(By.CLASS_NAME, "eK4R0e")
+                rows = table.find_elements(By.CLASS_NAME, "y0skZc")
+                for row in rows:
+                    try:
+                        day = row.find_element(By.CLASS_NAME, "ylH6lf").text
+                        time = row.find_element(By.CLASS_NAME, "mxowUb").text
+                        if day and time:
+                            hours_dict[day.strip()] = self._clean_hours_text(time)
+                    except:
+                        continue
+                if hours_dict:
+                    return hours_dict
+            except NoSuchElementException:
+                pass
+
+            # Method 3: Try finding hours in different format
+            selectors = [
+                "div[aria-label*='Hours'] span.ZDu9vd",  # Current status
+                "div[aria-label*='Hours'] div.MkV9",     # Another common location
+                "div.o0Svhf span.ZDu9vd",                # Alternate structure
+                "div[data-item-id*='oh']"                # Hours container
+            ]
+            
+            for selector in selectors:
+                try:
+                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    for element in elements:
+                        text = element.get_attribute('aria-label') or element.text
+                        if text:
+                            # Try to parse different time formats
+                            # Pattern: "Open today: 9 AM - 5 PM" or similar
+                            matches = re.findall(r'(\w+):\s*((?:\d{1,2}(?::\d{2})?\s*(?:AM|PM|noon|midnight))\s*[-–]\s*(?:\d{1,2}(?::\d{2})?\s*(?:AM|PM|noon|midnight)))', text)
+                            for day, time in matches:
+                                hours_dict[day.strip()] = self._clean_hours_text(time)
+                except:
+                    continue
+
+            # Method 4: Try clicking hours button and getting expanded info
+            try:
+                hours_button = self.driver.find_element(By.CSS_SELECTOR, "[aria-label*='Hours']")
+                hours_button.click()
+                time.sleep(1)
+                
+                expanded_hours = self.driver.find_element(By.CSS_SELECTOR, "div.t39EBf[role='dialog']")
+                days = expanded_hours.find_elements(By.CSS_SELECTOR, "div.ylH6lf")
+                times = expanded_hours.find_elements(By.CSS_SELECTOR, "div.mxowUb")
+                
+                for day, time in zip(days, times):
+                    day_text = day.text
+                    time_text = time.text
+                    if day_text and time_text:
+                        hours_dict[day_text.strip()] = self._clean_hours_text(time_text)
+            except:
+                pass
+
+            # If we found any hours, return them
+            if hours_dict:
+                return hours_dict
+
+            # Method 5: Last resort - try to get current status
+            try:
+                status_element = self.driver.find_element(By.CSS_SELECTOR, "div.MkV9 span.ZDu9vd")
+                status_text = status_element.text
+                if status_text:
+                    return {"current_status": self._clean_hours_text(status_text)}
+            except:
+                pass
+
+            return None
+
+        except Exception as e:
+            logger.debug(f"Error extracting hours: {str(e)}")
             return None
 
     def scrape_places_incrementally(self, input_csv: str, output_csv: str):
