@@ -39,8 +39,36 @@ class GooglePlacesScraper:
                 'google_id': google_id
             }
 
-            # Hours
-            details['hours'] = self._extract_hours()
+            # Description - New addition
+            try:
+                description_selectors = [
+                    "div.PYvSYb",  # Main description class
+                    "div[jslog*='metadata'] div.fontBodyMedium",  # Alternative location
+                    "div.WeS02d.fontBodyMedium",  # Another variation
+                ]
+                
+                for selector in description_selectors:
+                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    for element in elements:
+                        text = element.text
+                        if text and not text.startswith('·') and len(text) > 10:  # Avoid selecting bullet points
+                            details['description'] = text.strip()
+                            break
+                    if details.get('description'):
+                        break
+            except Exception as e:
+                logger.debug(f"Error extracting description: {str(e)}")
+                details['description'] = None
+
+            # Hours - Enhanced with temporary closure handling
+            hours_data = self._extract_hours()
+            if hours_data:
+                if isinstance(hours_data, dict) and hours_data.get('current_status') == 'Temporarily closed':
+                    details['hours'] = 'Temporarily closed'
+                else:
+                    details['hours'] = hours_data
+            else:
+                details['hours'] = None
 
             # Category
             try:
@@ -48,77 +76,15 @@ class GooglePlacesScraper:
                 details['category'] = category_element.text
             except NoSuchElementException:
                 try:
-                    # Backup method - look for category in header area
                     category_element = self.driver.find_element(By.CSS_SELECTOR, "button[jsaction*='pane.rating.category']")
                     details['category'] = category_element.text
                 except NoSuchElementException:
                     details['category'] = None
 
-            # Price - New enhanced extraction
-            try:
-                # Strategy 1: Header area near name/category
-                header_selectors = [
-                    "span.ZDu9vd",
-                    "div.LBgpqf",
-                    "span.mgr77e",
-                    "div.iTxXHe"
-                ]
-                
-                for selector in header_selectors:
-                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                    for element in elements:
-                        text = element.text
-                        if '$' in text:
-                            price_match = re.search(r'(\$+(?!\d)|\$\d+(?:[-–]\$?\d+)?)', text)
-                            if price_match:
-                                details['price'] = price_match.group(0)
-                                break
-                    if details.get('price'):
-                        break
+            # Price - Enhanced extraction
+            details['price'] = self._extract_price()
 
-                # Strategy 2: Attributes section
-                if not details.get('price'):
-                    attribute_selectors = [
-                        "div[aria-label*='Price range']",
-                        "div[aria-label*='Price: ']",
-                        "button[aria-label*='Price']",
-                        "span[aria-label*='Price']"
-                    ]
-                    
-                    for selector in attribute_selectors:
-                        elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                        for element in elements:
-                            aria_label = element.get_attribute('aria-label')
-                            if aria_label and '$' in aria_label:
-                                price_match = re.search(r'(\$+(?!\d)|\$\d+(?:[-–]\$?\d+)?)', aria_label)
-                                if price_match:
-                                    details['price'] = price_match.group(0)
-                                    break
-                        if details.get('price'):
-                            break
-
-                # Strategy 3: About section
-                if not details.get('price'):
-                    try:
-                        about_button = self.driver.find_element(By.CSS_SELECTOR, "button[aria-label*='About']")
-                        about_button.click()
-                        time.sleep(1)
-                        
-                        about_content = self.driver.find_element(By.CSS_SELECTOR, "div.m6QErb")
-                        about_text = about_content.text
-                        
-                        if '$' in about_text:
-                            price_match = re.search(r'(\$+(?!\d)|\$\d+(?:[-–]\$?\d+)?)', about_text)
-                            if price_match:
-                                details['price'] = price_match.group(0)
-                    except:
-                        pass
-
-            except Exception as e:
-                logger.debug(f"Error extracting price: {str(e)}")
-                details['price'] = None
-
-            # Reviews - This is working well from before
+            # Reviews - Using existing robust implementation
             try:
                 reviews_button = self.driver.find_element(By.CSS_SELECTOR, "[aria-label*='Reviews']")
                 reviews_button.click()
@@ -158,7 +124,56 @@ class GooglePlacesScraper:
         except Exception as e:
             logger.error(f"Error scraping place {original_name} ({google_id}): {str(e)}")
             return None
-        
+
+    def _extract_price(self) -> str:
+        """Enhanced price extraction with better handling of missing prices"""
+        try:
+            # Strategy 1: Header area near name/category
+            header_selectors = [
+                "span.ZDu9vd",
+                "div.LBgpqf",
+                "span.mgr77e",
+                "div.iTxXHe",
+                "div[aria-label*='Price range']",
+                "span[aria-label*='Price']"
+            ]
+            
+            for selector in header_selectors:
+                elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                for element in elements:
+                    text = element.text or element.get_attribute('aria-label') or ''
+                    if '$' in text:
+                        price_match = re.search(r'(\$+(?!\d)|\$\d+(?:[-–]\$?\d+)?)', text)
+                        if price_match:
+                            return price_match.group(0)
+
+            # Strategy 2: About section
+            try:
+                about_button = self.driver.find_element(By.CSS_SELECTOR, "button[aria-label*='About']")
+                about_button.click()
+                time.sleep(1)
+                
+                about_content = self.driver.find_element(By.CSS_SELECTOR, "div.m6QErb")
+                about_text = about_content.text
+                
+                if '$' in about_text:
+                    price_match = re.search(r'(\$+(?!\d)|\$\d+(?:[-–]\$?\d+)?)', about_text)
+                    if price_match:
+                        return price_match.group(0)
+            except:
+                pass
+
+            # If we couldn't find a price but the place exists, return empty string
+            # This distinguishes between "no price available" and "failed to extract"
+            if self.driver.find_elements(By.CSS_SELECTOR, "div.DkEaL"):
+                return ""
+            
+            return None
+
+        except Exception as e:
+            logger.debug(f"Error extracting price: {str(e)}")
+            return None
+
     def _clean_hours_text(self, text: str) -> str:
         """Clean up unicode characters and format hours text"""
         # Remove unicode characters
@@ -169,92 +184,81 @@ class GooglePlacesScraper:
         text = re.sub(r'\s+', ' ', text).strip()
         return text
 
-    def _extract_hours(self) -> dict:
-        """Extract hours with multiple fallback methods and cleaner formatting"""
-        try:
-            hours_dict = {}
+    def _parse_hours_from_text(self, text: str) -> dict:
+        """Parse hours from various text formats"""
+        hours_dict = {}
+        
+        # Check for temporary closure
+        if 'temporarily closed' in text.lower():
+            return {'current_status': 'Temporarily closed'}
             
-            # Method 1: Try t39EBf class with aria-label (current working method)
-            try:
-                hours_element = self.driver.find_element(By.CLASS_NAME, "t39EBf")
-                hours_text = hours_element.get_attribute('aria-label')
-                if hours_text and ',' in hours_text:
-                    for day_hours in hours_text.split(';'):
-                        if ',' in day_hours and 'Hide' not in day_hours:
-                            day, hours = day_hours.split(',', 1)
-                            hours_dict[day.strip()] = self._clean_hours_text(hours.strip())
-                    if hours_dict:
-                        return hours_dict
-            except NoSuchElementException:
-                pass
-
-            # Method 2: Try finding the hours table directly
-            try:
-                table = self.driver.find_element(By.CLASS_NAME, "eK4R0e")
-                rows = table.find_elements(By.CLASS_NAME, "y0skZc")
-                for row in rows:
-                    try:
-                        day = row.find_element(By.CLASS_NAME, "ylH6lf").text
-                        time = row.find_element(By.CLASS_NAME, "mxowUb").text
-                        if day and time:
-                            hours_dict[day.strip()] = self._clean_hours_text(time)
-                    except:
-                        continue
-                if hours_dict:
-                    return hours_dict
-            except NoSuchElementException:
-                pass
-
-            # Method 3: Try finding hours in different format
-            selectors = [
-                "div[aria-label*='Hours'] span.ZDu9vd",  # Current status
-                "div[aria-label*='Hours'] div.MkV9",     # Another common location
-                "div.o0Svhf span.ZDu9vd",                # Alternate structure
-                "div[data-item-id*='oh']"                # Hours container
-            ]
-            
-            for selector in selectors:
+        # Split by semicolon and process each day's hours
+        for day_hours in text.split(';'):
+            if ',' in day_hours and 'Hide' not in day_hours:
                 try:
-                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                    for element in elements:
-                        text = element.get_attribute('aria-label') or element.text
-                        if text:
-                            # Try to parse different time formats
-                            # Pattern: "Open today: 9 AM - 5 PM" or similar
-                            matches = re.findall(r'(\w+):\s*((?:\d{1,2}(?::\d{2})?\s*(?:AM|PM|noon|midnight))\s*[-–]\s*(?:\d{1,2}(?::\d{2})?\s*(?:AM|PM|noon|midnight)))', text)
-                            for day, time in matches:
-                                hours_dict[day.strip()] = self._clean_hours_text(time)
+                    # Split into day and hours, handling potential extra commas
+                    parts = day_hours.split(',', 1)
+                    day = parts[0].strip()
+                    hours = parts[1].strip()
+                    
+                    # Clean the hours text
+                    hours = self._clean_hours_text(hours)
+                    
+                    # Handle special cases like "Closed"
+                    if 'Closed' in hours:
+                        hours = 'Closed'
+                        
+                    hours_dict[day] = hours
                 except:
                     continue
+        
+        return hours_dict if hours_dict else None
 
-            # Method 4: Try clicking hours button and getting expanded info
+    def _extract_hours(self) -> dict:
+        """Extract hours with improved handling of temporary closures and current status"""
+        try:
+            # Check for temporary closure first
+            closure_selectors = [
+                "div[aria-label*='Temporarily closed']",
+                "div.o0Svhf",
+                "span.ZDu9vd"
+            ]
+            
+            for selector in closure_selectors:
+                elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                for element in elements:
+                    text = element.text or element.get_attribute('aria-label') or ''
+                    if 'temporarily closed' in text.lower():
+                        return {'current_status': 'Temporarily closed'}
+
+            # Try regular hours extraction methods
+            hours_selectors = [
+                "div.t39EBf",
+                "div[aria-label*='Hours']",
+                "div[jsaction*='openhours']",
+                "div[data-hide-tooltip-on-mouse-move='true']"
+            ]
+            
+            for selector in hours_selectors:
+                elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                for element in elements:
+                    aria_text = element.get_attribute('aria-label')
+                    if aria_text and ('AM' in aria_text or 'PM' in aria_text or 'Closed' in aria_text):
+                        hours_dict = self._parse_hours_from_text(aria_text)
+                        if hours_dict:
+                            return hours_dict
+                            
+                    element_text = element.text
+                    if element_text and ('AM' in element_text or 'PM' in element_text or 'Closed' in element_text):
+                        hours_dict = self._parse_hours_from_text(element_text)
+                        if hours_dict:
+                            return hours_dict
+
+            # Try getting current status as fallback
             try:
-                hours_button = self.driver.find_element(By.CSS_SELECTOR, "[aria-label*='Hours']")
-                hours_button.click()
-                time.sleep(1)
-                
-                expanded_hours = self.driver.find_element(By.CSS_SELECTOR, "div.t39EBf[role='dialog']")
-                days = expanded_hours.find_elements(By.CSS_SELECTOR, "div.ylH6lf")
-                times = expanded_hours.find_elements(By.CSS_SELECTOR, "div.mxowUb")
-                
-                for day, time in zip(days, times):
-                    day_text = day.text
-                    time_text = time.text
-                    if day_text and time_text:
-                        hours_dict[day_text.strip()] = self._clean_hours_text(time_text)
-            except:
-                pass
-
-            # If we found any hours, return them
-            if hours_dict:
-                return hours_dict
-
-            # Method 5: Last resort - try to get current status
-            try:
-                status_element = self.driver.find_element(By.CSS_SELECTOR, "div.MkV9 span.ZDu9vd")
-                status_text = status_element.text
-                if status_text:
-                    return {"current_status": self._clean_hours_text(status_text)}
+                status = self.driver.find_element(By.CSS_SELECTOR, "span.ZDu9vd").text
+                if status:
+                    return {"current_status": self._clean_hours_text(status)}
             except:
                 pass
 
@@ -303,6 +307,7 @@ class GooglePlacesScraper:
                 output_file_exists = True
                 scraped_ids.add(row['google_id'])
             
+            # Random delay between requests to avoid rate limiting
             if (idx + 1) % 10 == 0:
                 time.sleep(random.uniform(15, 25))
 
