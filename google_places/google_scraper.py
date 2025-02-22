@@ -53,6 +53,18 @@ class GooglePlacesScraper:
             except NoSuchElementException:
                 details['hours'] = None
 
+            # Category
+            try:
+                category_element = self.driver.find_element(By.CLASS_NAME, "DkEaL")
+                details['category'] = category_element.text
+            except NoSuchElementException:
+                try:
+                    # Backup method - look for category in header area
+                    category_element = self.driver.find_element(By.CSS_SELECTOR, "button[jsaction*='pane.rating.category']")
+                    details['category'] = category_element.text
+                except NoSuchElementException:
+                    details['category'] = None
+
             # Price - New enhanced extraction
             try:
                 # Strategy 1: Header area near name/category
