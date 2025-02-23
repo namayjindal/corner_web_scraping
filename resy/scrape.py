@@ -33,7 +33,7 @@ class ResyScraper:
 
     def _random_delay(self):
         """Add substantial random delay between requests"""
-        delay = random.uniform(15, 30)
+        delay = random.uniform(5, 10)
         print(f"\nWaiting {delay:.1f} seconds before next request...")
         
         # Break the delay into chunks to show progress
@@ -58,59 +58,44 @@ class ResyScraper:
         data = {'found': False}
         
         try:
-            print("Waiting for page to load...")
             wait = WebDriverWait(driver, timeout)
+            print("Waiting for page to load...")
             
-            # Wait for content to load
-            time.sleep(10)  # Initial wait for JavaScript
-            print("Checking for venue content...")
-            
-            # Check if we're on a valid venue page
-            if "The page you're looking for cannot be found" in driver.page_source:
-                print("Venue page not found...")
-                return data
-            
-            # Try to find venue content
+            # Wait for specific content sections
             try:
-                venue_content = wait.until(
-                    EC.presence_of_element_located((By.CLASS_NAME, 'VenuePage__content'))
+                # Wait for why we like it section
+                why_we_like_it = wait.until(
+                    EC.presence_of_element_located((By.CLASS_NAME, "VenuePage__why-we-like-it__body"))
                 )
-                print("Found venue content!")
+                data['why_we_like_it'] = why_we_like_it.text.strip()
+                print("Found 'Why We Like It' section")
             except:
-                print("No venue content found...")
-                return data
-            
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
-            
-            # Extract basic information
-            name_element = soup.find('h1', {'class': 'VenuePage__title'})
-            description_element = soup.find('div', {'class': 'VenuePage__description'})
-            
-            data.update({
-                'found': True,
-                'name': name_element.text.strip() if name_element else '',
-                'description': description_element.text.strip() if description_element else '',
-                'details': {}
-            })
-            
-            # Extract additional details
-            time.sleep(5)  # Wait for details to load
-            details_section = soup.find('div', {'class': 'VenueDetails'})
-            if details_section:
-                detail_items = details_section.find_all('div', {'class': 'DetailItem'})
-                for item in detail_items:
-                    label = item.find('div', {'class': 'DetailItem__label'})
-                    value = item.find('div', {'class': 'DetailItem__value'})
-                    if label and value:
-                        data['details'][label.text.strip()] = value.text.strip()
-            
-            # Get location info
-            location_element = soup.find('address', {'class': 'VenuePage__address'})
-            if location_element:
-                data['location'] = location_element.text.strip()
-            
-            print("Venue data extraction complete!")
-            
+                print("No 'Why We Like It' section found")
+                data['why_we_like_it'] = None
+
+            try:
+                # Wait for need to know section
+                need_to_know = driver.find_element(By.ID, "clamped-content-need-to-know")
+                data['need_to_know'] = need_to_know.text.strip()
+                print("Found 'Need to Know' section")
+            except:
+                print("No 'Need to Know' section found")
+                data['need_to_know'] = None
+
+            try:
+                # Wait for about section
+                about = driver.find_element(By.ID, "clamped-content-about-venue") 
+                data['about'] = about.text.strip()
+                print("Found 'About' section")
+            except:
+                print("No 'About' section found")
+                data['about'] = None
+
+            # If we found any content, mark as found
+            if any([data['why_we_like_it'], data['need_to_know'], data['about']]):
+                data['found'] = True
+                print("Successfully found venue data!")
+
         except Exception as e:
             logger.error(f"Error extracting data: {e}")
             
@@ -125,7 +110,7 @@ class ResyScraper:
 
     def scrape_venue(self, name: str, venue_id: str) -> dict:
         """Attempt to scrape venue data from Resy"""
-        url = f"https://resy.com/cities/new-york-ny/venues/{self._format_venue_name(name)}?date=2025-02-22&seats=2"
+        url = f"https://resy.com/cities/new-york-ny/venues/{self._format_venue_name(name)}?date=2025-02-23&seats=2"
         print(f"\nAttempting to scrape: {url}")
         
         try:
@@ -216,4 +201,11 @@ class ResyScraper:
 
 if __name__ == "__main__":
     scraper = ResyScraper()
-    scraper.process_csv('places.csv', 'resy_results.csv')
+    # Test with a single venue
+    result = scraper.scrape_venue(
+        name="Double Chicken Please",
+        venue_id="11582"
+    )
+    print("\nResults:")
+    print(json.dumps(result, indent=2))
+    scraper.driver.quit()
