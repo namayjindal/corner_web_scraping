@@ -4,14 +4,13 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from bs4 import BeautifulSoup
 import json
 import logging
 import time
 import random
 from datetime import datetime
-from pathlib import Path
 import re
+import os
 
 logging.basicConfig(
     level=logging.INFO,
@@ -28,12 +27,12 @@ class ResyScraper:
         self.driver = webdriver.Chrome(options=chrome_options)
         self.successful_matches = 0
         self.total_processed = 0
-        self.data_dir = Path('resy_data')
-        self.data_dir.mkdir(exist_ok=True)
+        self.output_json = 'resy_data.json'
+        self.scraped_data = []
 
     def _random_delay(self):
         """Add substantial random delay between requests"""
-        delay = random.uniform(5, 10)
+        delay = random.uniform(3, 5)
         print(f"\nWaiting {delay:.1f} seconds before next request...")
         
         # Break the delay into chunks to show progress
@@ -53,7 +52,7 @@ class ResyScraper:
         formatted = re.sub(r'-+', '-', formatted)
         return formatted.strip('-')
 
-    def _extract_venue_data(self, driver, timeout=45) -> dict:
+    def _extract_venue_data(self, driver, timeout=7) -> dict:
         """Extract venue data from Resy page"""
         data = {'found': False}
         
@@ -101,12 +100,13 @@ class ResyScraper:
             
         return data
 
-    def _save_venue_data(self, venue_data: dict, venue_id: str):
-        """Save venue data to JSON file"""
-        if venue_data['found']:
-            file_path = self.data_dir / f"{venue_id}.json"
-            with open(file_path, 'w', encoding='utf-8') as f:
-                json.dump(venue_data, f, indent=2, ensure_ascii=False)
+    def _save_incremental_result(self, result: dict):
+        """Save a single result to JSON incrementally"""
+        self.scraped_data.append(result)
+        
+        # Write entire list to JSON file
+        with open(self.output_json, 'w', encoding='utf-8') as f:
+            json.dump(self.scraped_data, f, indent=2, ensure_ascii=False)
 
     def scrape_venue(self, name: str, venue_id: str) -> dict:
         """Attempt to scrape venue data from Resy"""
@@ -120,19 +120,30 @@ class ResyScraper:
             
             if data['found']:
                 data['url'] = url
-                self._save_venue_data(data, venue_id)
+                data['corner_place_id'] = venue_id
+                data['name'] = name
+                
+                # Save result immediately after finding data
+                self._save_incremental_result(data)
+                self.successful_matches += 1
             
             self._random_delay()
             return data
                 
         except Exception as e:
             logger.error(f"Error with URL {url}: {e}")
-            return {'found': False, 'name': name}
+            error_result = {
+                'found': False, 
+                'name': name, 
+                'corner_place_id': venue_id,
+                'error': str(e)
+            }
+            self._save_incremental_result(error_result)
+            return error_result
 
-    def process_csv(self, input_path: str, output_path: str):
-        """Process all venues from CSV with detailed progress tracking"""
+    def process_csv(self, input_path: str):
+        """Process all venues from CSV with incremental saving"""
         df = pd.read_csv(input_path)
-        results = []
         start_time = datetime.now()
         
         print("\nStarting Resy data collection...")
@@ -148,64 +159,27 @@ class ResyScraper:
                 print(f"\nProcessing ({idx + 1}/{len(df)}): {venue_name}")
                 result = self.scrape_venue(venue_name, venue_id)
                 
-                if result['found']:
-                    self.successful_matches += 1
-                    print(f"✓ Found on Resy!")
-                    print(f"  Details: {len(result.get('details', {}))} attributes found")
-                    print(f"  Description length: {len(result.get('description', ''))}")
-                else:
-                    print("✗ Not found on Resy")
-                
-                # Update success rate
+                # Update and print success rate
                 success_rate = (self.successful_matches / self.total_processed) * 100
                 print(f"Current success rate: {success_rate:.1f}%")
                 
-                result.update({
-                    'corner_place_id': venue_id,
-                    'google_id': row['google_id'],
-                    'original_name': venue_name,
-                    'neighborhood': row['neighborhood']
-                })
-                results.append(result)
+                # Print elapsed time and estimate remaining time
+                elapsed_time = datetime.now() - start_time
+                avg_time_per_venue = elapsed_time.total_seconds() / self.total_processed
+                remaining_venues = len(df) - (idx + 1)
+                estimated_remaining_time = remaining_venues * avg_time_per_venue
                 
-                # Save progress every 10 venues
-                if (idx + 1) % 10 == 0:
-                    self._save_progress(results, output_path, start_time)
+                print(f"\nElapsed time: {elapsed_time}")
+                print(f"Estimated time remaining: {estimated_remaining_time:.0f} seconds")
                 
         finally:
             # Make sure to close the browser
             self.driver.quit()
-            
-        # Final save
-        self._save_progress(results, output_path, start_time, final=True)
 
-    def _save_progress(self, results, output_path, start_time, final=False):
-        """Save progress and print statistics"""
-        pd.DataFrame(results).to_csv(output_path, index=False)
-        
-        elapsed_time = datetime.now() - start_time
-        avg_time_per_venue = elapsed_time.total_seconds() / self.total_processed
-        
-        print("\n" + "=" * 50)
-        print("Progress Update:")
-        print(f"Venues processed: {self.total_processed}")
-        print(f"Successful matches: {self.successful_matches}")
-        print(f"Success rate: {(self.successful_matches / self.total_processed) * 100:.1f}%")
-        print(f"Average time per venue: {avg_time_per_venue:.1f} seconds")
-        print(f"Elapsed time: {elapsed_time}")
-        if not final:
-            remaining = len(results) - self.total_processed
-            estimated_remaining_time = remaining * avg_time_per_venue
-            print(f"Estimated time remaining: {estimated_remaining_time:.0f} seconds")
-        print("=" * 50)
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     scraper = ResyScraper()
-    # Test with a single venue
-    result = scraper.scrape_venue(
-        name="Double Chicken Please",
-        venue_id="11582"
-    )
-    print("\nResults:")
-    print(json.dumps(result, indent=2))
-    scraper.driver.quit()
+    # Process the CSV and save results incrementally to JSON
+    scraper.process_csv('places.csv')
+    logger.info(f'Data saved to {scraper.output_json}')
+    print(f"Total venues processed: {scraper.total_processed}")
+    print(f"Successful matches: {scraper.successful_matches}")
