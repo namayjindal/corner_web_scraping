@@ -24,7 +24,7 @@ class DataMigrator:
         """Create database schema with fallback if pgvector isn't available"""
         try:
             # Try to create pgvector extension
-            self.cur.execute("CREATE EXTENSION IF NOT EXISTS pgvector;")
+            self.cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
             self.conn.commit()
             logger.info("pgvector extension created successfully")
         except Exception as e:

@@ -110,7 +110,7 @@ class ResyScraper:
 
     def scrape_venue(self, name: str, venue_id: str) -> dict:
         """Attempt to scrape venue data from Resy"""
-        url = f"https://resy.com/cities/new-york-ny/venues/{self._format_venue_name(name)}?date=2025-02-23&seats=2"
+        url = f"https://resy.com/cities/new-york-ny/venues/{self._format_venue_name(name)}?date=2025-02-24&seats=2"
         print(f"\nAttempting to scrape: {url}")
         
         try:
