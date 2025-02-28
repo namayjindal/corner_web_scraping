@@ -78,8 +78,8 @@
     "instagram_handle": "thaidiner",
     "tags": [
       "thai",
-      "thai restaurant",
-      "restaurant"
+      "restaurant",
+      "thai restaurant"
     ],
     "description": "Classic Thai dishes and drinks by a lauded restaurant group in a kitschy-cool, diner-style setting.",
     "reviews": [
@@ -160,11 +160,11 @@
     "website": "http://publicrecords.nyc/",
     "instagram_handle": "publicrecordsnyc",
     "tags": [
-      "arts organization",
-      "restaurant",
       "bar",
       "cafe",
-      "night_club"
+      "arts organization",
+      "night_club",
+      "restaurant"
     ],
     "description": "Hi-fi record bar with food & drink offerings plus an intimate performance space & vegan cafe.",
     "reviews": [
@@ -205,10 +205,10 @@
     "website": "http://www.bookclubbar.com/",
     "instagram_handle": "bookclubbar",
     "tags": [
-      "bar",
+      "cafe",
       "book store",
       "book_store",
-      "cafe"
+      "bar"
     ],
     "description": "Cozy bookstore with comfy chairs for reading plus a bar serving handcrafted drinks.",
     "reviews": [
@@ -241,12 +241,12 @@
     "website": "http://winsonbrooklyn.com/",
     "instagram_handle": null,
     "tags": [
+      "bakery",
+      "coffee_shop",
+      "bar",
       "asian",
       "restaurant",
-      "coffee_shop",
       "pastry",
-      "bakery",
-      "bar",
       "taiwanese"
     ],
     "description": "Laid-back neighborhood spot serving inventive twists on Taiwanese classics for brunch & dinner.",
@@ -280,9 +280,9 @@
     "website": "https://us.lacabra.com/pages/east-village",
     "instagram_handle": "lacabracoffee",
     "tags": [
+      "cafe",
       "bakery",
-      "coffee shop",
-      "cafe"
+      "coffee shop"
     ],
     "description": "4.7\n(1,144)\n·$10–20",
     "reviews": [
@@ -319,9 +319,9 @@
     "website": "http://www.misinewyork.com/",
     "instagram_handle": "misinewyork",
     "tags": [
-      "italian restaurant",
       "italian",
-      "restaurant"
+      "restaurant",
+      "italian restaurant"
     ],
     "description": "Contemporary-chic Italian dining space serving elevated antipasti and handmade pasta dishes.",
     "reviews": [
@@ -354,9 +354,9 @@
     "website": "http://rakunyc.com/",
     "instagram_handle": "rakunyc",
     "tags": [
+      "udon noodle restaurant",
       "japanese",
-      "restaurant",
-      "udon noodle restaurant"
+      "restaurant"
     ],
     "description": "Busy, minimal-chic room offering house udon specialties and Japanese small plates.",
     "reviews": [
@@ -458,9 +458,9 @@
     "website": "http://thirdsbk.com/",
     "instagram_handle": "thirdsbk",
     "tags": [
-      "japanese restaurant",
-      "japanese",
       "bar",
+      "japanese",
+      "japanese restaurant",
       "restaurant"
     ],
     "description": "Creative Japanese comfort fare by a lauded restaurant group in a cozy setting with tall ceilings.",
@@ -487,11 +487,11 @@
     "website": "http://www.monomonony.com/",
     "instagram_handle": "monomono.nyc",
     "tags": [
-      "korean restaurant",
-      "restaurant",
+      "cafe",
       "bar",
+      "korean restaurant",
       "korean",
-      "cafe"
+      "restaurant"
     ],
     "description": "Korean fried chicken & other eats served alongside soju cocktails while DJs spin jazz records.",
     "reviews": [
@@ -549,9 +549,9 @@
     "instagram_handle": "bibliothequenyc",
     "tags": [
       "cafe",
-      "bar",
       "wine bar",
-      "book_store"
+      "book_store",
+      "bar"
     ],
     "description": "4.3\n(293)\n·$$$",
     "reviews": [
@@ -588,8 +588,8 @@
     "website": "http://www.devocion.com/",
     "instagram_handle": "devocionusa",
     "tags": [
-      "coffee shop",
-      "cafe"
+      "cafe",
+      "coffee shop"
     ],
     "description": "Carefully sourced Colombian coffee served in a light-filled, brick-lined space with leather sofas.",
     "reviews": [
@@ -660,8 +660,8 @@
     "website": "http://www.lilianewyork.com/",
     "instagram_handle": "lilianewyork",
     "tags": [
-      "italian restaurant",
-      "restaurant"
+      "restaurant",
+      "italian restaurant"
     ],
     "description": "Converted auto-body shop offering wood-fired Italian fare, housemade pastas, and cocktails.",
     "reviews": [
@@ -826,9 +826,9 @@
     "website": "http://www.tomijazz.com/",
     "instagram_handle": null,
     "tags": [
-      "night_club",
       "bar",
       "jazz club",
+      "night_club",
       "restaurant"
     ],
     "description": "Low-key bar & grill featuring Japanese bites & live jazz in a cozy setting with a speakeasy vibe.",
@@ -882,9 +882,9 @@
     "website": "https://us.lacabra.com/pages/soho",
     "instagram_handle": "lacabracoffee",
     "tags": [
+      "cafe",
       "bakery",
-      "coffee shop",
-      "cafe"
+      "coffee shop"
     ],
     "description": "4.5\n(501)\n·$10–20",
     "reviews": [
@@ -1000,9 +1000,9 @@
     "website": "http://donangie.com/",
     "instagram_handle": "donangienyc",
     "tags": [
-      "italian restaurant",
       "italian",
-      "restaurant"
+      "restaurant",
+      "italian restaurant"
     ],
     "description": "Serves Italian-American classics with wine and cocktails in a marble-accented space.",
     "reviews": [
@@ -1035,8 +1035,8 @@
     "website": "https://www.thehighline.org/",
     "instagram_handle": "highlinenyc",
     "tags": [
-      "park",
-      "nature"
+      "nature",
+      "park"
     ],
     "description": "Popular park 30 feet above street level on an old rail line, with river & city views.",
     "reviews": [
@@ -1152,11 +1152,11 @@
     "website": "http://antidoteny.com/",
     "instagram_handle": "antidote__nyc",
     "tags": [
-      "nature",
-      "restaurant",
-      "bar",
       "chinese restaurant",
-      "chinese"
+      "bar",
+      "chinese",
+      "restaurant",
+      "nature"
     ],
     "description": "4.8\n(1,804)\n·$30–50",
     "reviews": [
@@ -1182,11 +1182,11 @@
     "website": "http://www.centerforfiction.org/",
     "instagram_handle": "center4fiction",
     "tags": [
-      "bar",
       "book store",
+      "book_store",
       "cafe",
       "culture",
-      "book_store"
+      "bar"
     ],
     "description": "Book store·",
     "reviews": [
@@ -1219,9 +1219,9 @@
     "website": "http://birdsofafeatherny.com/",
     "instagram_handle": "birdsofafeatherbk",
     "tags": [
-      "chinese restaurant",
       "restaurant",
-      "chinese"
+      "chinese",
+      "chinese restaurant"
     ],
     "description": "Spicy Sichuan noodles, dim sum, and large plates to share are offered in a casual setting.",
     "reviews": [
@@ -1255,8 +1255,8 @@
     "instagram_handle": "lartusi",
     "tags": [
       "bar",
-      "italian restaurant",
-      "restaurant"
+      "restaurant",
+      "italian restaurant"
     ],
     "description": "Italian small plates are matched by an extensive wine list at this bi-level restaurant.",
     "reviews": [
@@ -1341,12 +1341,12 @@
     "website": "http://metrograph.com/",
     "instagram_handle": "metrograph",
     "tags": [
-      "restaurant",
-      "bar",
       "cafe",
+      "bar",
+      "night_club",
+      "restaurant",
       "movie theater",
-      "activity",
-      "night_club"
+      "activity"
     ],
     "description": "State-of-the-art cinema with an upscale American eatery & two bars evokes old-time Hollywood haunts.",
     "reviews": [
@@ -1372,10 +1372,10 @@
     "website": "http://www.ilovebuvette.com/",
     "instagram_handle": "buvettenyc",
     "tags": [
-      "french restaurant",
+      "cafe",
       "bar",
-      "restaurant",
-      "cafe"
+      "french restaurant",
+      "restaurant"
     ],
     "description": "Popular, quaint bistro offering a French small-plates menu at breakfast, lunch, and dinner.",
     "reviews": [
@@ -1408,11 +1408,11 @@
     "website": "http://usaginy.com/",
     "instagram_handle": "usaginy",
     "tags": [
-      "coffee_shop",
       "art gallery",
-      "cafe",
+      "book_store",
+      "coffee_shop",
       "culture",
-      "book_store"
+      "cafe"
     ],
     "description": "Calm, Japanese-inspired cafe & exhibition space featuring an art gallery, bookstore & coffee bar.",
     "reviews": [
@@ -1449,8 +1449,8 @@
     "website": "http://viacarota.com/",
     "instagram_handle": "viacarota",
     "tags": [
-      "italian restaurant",
-      "restaurant"
+      "restaurant",
+      "italian restaurant"
     ],
     "description": "Italian trattoria serving traditional plates & apéritifs in a rustic, cozy space.",
     "reviews": [
@@ -1551,8 +1551,8 @@
     "instagram_handle": "meilaiwahcoffeeshop",
     "tags": [
       "bakery",
-      "chinese restaurant",
-      "restaurant"
+      "restaurant",
+      "chinese restaurant"
     ],
     "description": "No-frills, cozy Chinese restaurant & bakery serving traditional buns, congee & rice noodle rolls.",
     "reviews": [
@@ -1729,9 +1729,9 @@
     "website": "http://www.lostacos1.com/",
     "instagram_handle": "lostacos1",
     "tags": [
+      "restaurant",
       "taco restaurant",
-      "mexican",
-      "restaurant"
+      "mexican"
     ],
     "description": "Small pit stop with standing tables serving authentic Mexican street food.",
     "reviews": [
@@ -1757,8 +1757,8 @@
     "website": "https://www.centralparknyc.org/",
     "instagram_handle": "centralparknyc",
     "tags": [
-      "park",
-      "nature"
+      "nature",
+      "park"
     ],
     "description": "Sprawling park with pedestrian paths & ballfields, plus a zoo, carousel, boat rentals & a reservoir.",
     "reviews": [
@@ -1796,8 +1796,8 @@
     "instagram_handle": "taqueria_ramirez_",
     "tags": [
       "mexican restaurant",
-      "mexican",
-      "restaurant"
+      "restaurant",
+      "mexican"
     ],
     "description": "Traditional meat tacos with fillings like pastor and tripa from a compact, subway-tiled eatery.",
     "reviews": [
@@ -1834,8 +1834,8 @@
     "website": "https://www.caffepanna.com/",
     "instagram_handle": "caffepanna",
     "tags": [
-      "ice cream shop",
-      "cafe"
+      "cafe",
+      "ice cream shop"
     ],
     "description": "Roman gelateria churning out seasonal scoops, affogato, and coffee in a stylish setting.",
     "reviews": [
@@ -1872,8 +1872,8 @@
     "website": "https://katzsdelicatessen.com/",
     "instagram_handle": null,
     "tags": [
-      "deli",
-      "restaurant"
+      "restaurant",
+      "deli"
     ],
     "description": "No-frills deli with theatrically cranky service serving mile-high sandwiches since 1888.",
     "reviews": [
@@ -1910,9 +1910,9 @@
     "website": "http://davellenewyork.com/",
     "instagram_handle": "davelle.nyc",
     "tags": [
+      "cafe",
       "japanese restaurant",
-      "restaurant",
-      "cafe"
+      "restaurant"
     ],
     "description": "Japanese cafe offering set breakfasts and lunches, plus coffee, tea, and matcha lattes.",
     "reviews": [
@@ -1945,8 +1945,8 @@
     "website": "https://www.chelseamarket.com/",
     "instagram_handle": "chelseamarketny",
     "tags": [
-      "destination",
-      "market"
+      "market",
+      "destination"
     ],
     "description": "Indoor marketplace renowned for its wide range of grocers (fish, produce, etc.), shops & eateries.",
     "reviews": [
@@ -2055,10 +2055,10 @@
     "website": "https://www.bygracestreet.com/",
     "instagram_handle": "gracestreetcafe",
     "tags": [
-      "dessert restaurant",
       "bakery",
-      "restaurant",
-      "cafe"
+      "dessert restaurant",
+      "cafe",
+      "restaurant"
     ],
     "description": "Contemporary coffeehouse offering Asian donuts, waffles, matcha lattes, teas, and espresso drinks.",
     "reviews": [
@@ -2089,8 +2089,8 @@
     "instagram_handle": "DominiqueAnsel",
     "tags": [
       "bakery",
-      "restaurant",
-      "cafe"
+      "cafe",
+      "restaurant"
     ],
     "description": "This bakery-cafe headed by pastry chef Dominique Ansel serves up creative & beautiful French treats.",
     "reviews": [
@@ -2161,8 +2161,8 @@
     "website": "https://chodanggolnyc.com/",
     "instagram_handle": "chodanggol",
     "tags": [
-      "korean restaurant",
       "korean",
+      "korean restaurant",
       "restaurant"
     ],
     "description": "Easygoing Korean venue offering soups and stews with homemade tofu, plus other comfort food.",
@@ -2201,8 +2201,8 @@
     "instagram_handle": "pdtnyc",
     "tags": [
       "bar",
-      "cocktail bar",
-      "restaurant"
+      "restaurant",
+      "cocktail bar"
     ],
     "description": "Patrons who enter through a phone booth in Crif Dogs next door sip novel cocktails in a dark space.",
     "reviews": [
@@ -2305,9 +2305,9 @@
     "instagram_handle": null,
     "tags": [
       "bar",
-      "chinese restaurant",
       "restaurant",
-      "chinese"
+      "chinese",
+      "chinese restaurant"
     ],
     "description": "Cozy, hip spot featuring Chinese dry pot with a choice of spice level, plus appetizers and dim sum.",
     "reviews": [
@@ -2384,8 +2384,8 @@
     "website": "https://www.rhythmzeronyc.com/",
     "instagram_handle": "rhythmzeronyc",
     "tags": [
-      "coffee shop",
-      "cafe"
+      "cafe",
+      "coffee shop"
     ],
     "description": "4.6\n(343)\n·$1–10",
     "reviews": [
@@ -2422,8 +2422,8 @@
     "website": "https://www.madehotels.com/eat-drink",
     "instagram_handle": "madehotels",
     "tags": [
-      "coffee shop",
-      "cafe"
+      "cafe",
+      "coffee shop"
     ],
     "description": "Hotel gathering spot featuring coffee, espresso, and baked goods amid a cozy, laid-back vibe.",
     "reviews": [
@@ -2460,8 +2460,8 @@
     "website": "https://happy-medium.co/",
     "instagram_handle": null,
     "tags": [
-      "art cafe",
-      "cafe"
+      "cafe",
+      "art cafe"
     ],
     "description": "4.4\n(167)\n·$20–30",
     "reviews": [
@@ -2525,8 +2525,8 @@
     "instagram_handle": "sipandguzzlenyc",
     "tags": [
       "bar",
-      "cocktail bar",
-      "restaurant"
+      "restaurant",
+      "cocktail bar"
     ],
     "description": "4.3\n(337)\n·$50–100",
     "reviews": [
@@ -2631,9 +2631,9 @@
     "website": "https://www.torrisinyc.com/?utm_medium=Click&utm_source=GoogleMyBusiness",
     "instagram_handle": "majorfoodgroup",
     "tags": [
-      "italian restaurant",
       "italian",
-      "restaurant"
+      "restaurant",
+      "italian restaurant"
     ],
     "description": "4.6\n(607)\n·$100+",
     "reviews": [
@@ -2704,10 +2704,10 @@
     "website": "http://www.stjardimnyc.com/",
     "instagram_handle": "stjardimnyc",
     "tags": [
-      "bar",
+      "cafe",
       "wine bar",
       "restaurant",
-      "cafe"
+      "bar"
     ],
     "description": "\nDine-in\n·\n\nTakeout\n·\n\nDelivery\n",
     "reviews": [
@@ -2774,9 +2774,9 @@
     "website": "https://www.raulavilainc.com/Raul_Inc/cafe",
     "instagram_handle": "cafeflornyc",
     "tags": [
-      "bar",
+      "cafe",
       "espresso bar",
-      "cafe"
+      "bar"
     ],
     "description": "4.2\n(409)\n·$1–10",
     "reviews": [
@@ -2806,9 +2806,9 @@
     "website": "http://www.goldendinerny.com/",
     "instagram_handle": "goldendinerny",
     "tags": [
-      "diner",
       "restaurant",
-      "chinese"
+      "chinese",
+      "diner"
     ],
     "description": "Serves diner food including pancakes and cheeseburgers with international influences, plus counter seating available.",
     "reviews": [
@@ -2879,8 +2879,8 @@
     "website": "http://www.hernameishan.com/",
     "instagram_handle": "hernameishan",
     "tags": [
-      "korean restaurant",
       "korean",
+      "korean restaurant",
       "restaurant"
     ],
     "description": "Rustic-modern space for homey Korean pots, noodles, and BBQ, plus cocktails and house-infused soju.",
@@ -3092,8 +3092,8 @@
     "website": "https://ariarinyc.com/",
     "instagram_handle": "ariarinyc",
     "tags": [
-      "korean restaurant",
       "korean",
+      "korean restaurant",
       "restaurant"
     ],
     "description": "4.6\n(385)\n·$50–100",
@@ -3131,9 +3131,9 @@
     "website": "https://www.chaanteahouse.com/",
     "instagram_handle": "chaanteahouse",
     "tags": [
-      "tea house",
+      "cafe",
       "restaurant",
-      "cafe"
+      "tea house"
     ],
     "description": "Extensive tea list, unique sweets, and snacks are served a la carte or in formal tea ceremonies.",
     "reviews": [
@@ -3386,9 +3386,9 @@
     "instagram_handle": "bubbys",
     "tags": [
       "bar",
-      "pancake restaurant",
       "bakery",
-      "restaurant"
+      "restaurant",
+      "pancake restaurant"
     ],
     "description": "Weekend brunch hot spot serving homestyle American eats with many locally sourced ingredients.",
     "reviews": [
@@ -3425,8 +3425,8 @@
     "website": "http://landtoseanyc.com/",
     "instagram_handle": "landtoseanyc",
     "tags": [
-      "bar",
-      "cafe"
+      "cafe",
+      "bar"
     ],
     "description": "4.8\n(270)\n·$1–10",
     "reviews": [
@@ -3556,9 +3556,9 @@
     "instagram_handle": "majorfoodgroup",
     "tags": [
       "bagel",
-      "breakfast restaurant",
+      "seafood",
       "restaurant",
-      "seafood"
+      "breakfast restaurant"
     ],
     "description": "Smoked fish, housemade bagels & other appetizing fare offered in a buzzy, vintage-style spot.",
     "reviews": [
@@ -3591,9 +3591,9 @@
     "website": "http://www.hi-collar.com/",
     "instagram_handle": "hi_collar",
     "tags": [
-      "japanese restaurant",
-      "japanese",
       "bar",
+      "japanese",
+      "japanese restaurant",
       "restaurant"
     ],
     "description": "Snazzy, compact Japanese cafe showcasing high-end coffee & sandwiches, plus sake & beer at night.",
@@ -3721,8 +3721,8 @@
     "instagram_handle": "semmanyc",
     "tags": [
       "indian",
-      "south indian restaurant",
-      "restaurant"
+      "restaurant",
+      "south indian restaurant"
     ],
     "description": "Stylish, relaxed restaurant serving regional specialties from Southern India, plus cocktails and wine.",
     "reviews": [
@@ -3793,8 +3793,8 @@
     "website": "https://www.shujiaony.com/",
     "instagram_handle": null,
     "tags": [
-      "chinese restaurant",
-      "restaurant"
+      "restaurant",
+      "chinese restaurant"
     ],
     "description": "Simple Chinese cafe specializing in soups & noodles with a view of workers making dumplings by hand.",
     "reviews": [
@@ -3831,10 +3831,10 @@
     "website": "https://www.okonomi.us/",
     "instagram_handle": "okonomi_yujiramen",
     "tags": [
-      "ramen",
       "japanese",
-      "restaurant",
-      "japanese restaurant"
+      "ramen",
+      "japanese restaurant",
+      "restaurant"
     ],
     "description": "\" Small Japanese place serving ramen, bento, and donburi, plus a range of sake.\"",
     "reviews": [
@@ -3867,12 +3867,12 @@
     "website": "http://www.pausecafenyc.com/",
     "instagram_handle": "pausecafenyc",
     "tags": [
-      "breakfast",
-      "coffee",
       "brunch",
-      "restaurant",
+      "breakfast",
+      "cafe",
       "moroccan",
-      "cafe"
+      "restaurant",
+      "coffee"
     ],
     "description": "Cozy coffeehouse serving breakfast, sandwiches & smoothies in a homey space with Moroccan accents.",
     "reviews": [
@@ -3905,8 +3905,8 @@
     "website": "https://www.szechuanmountainhouse.com/",
     "instagram_handle": "szechuanmountainhouse",
     "tags": [
-      "restaurant",
-      "sichuan restaurant"
+      "sichuan restaurant",
+      "restaurant"
     ],
     "description": "Group-friendly destination for homey Sichuan dishes, many of which are made with chili's, and pots of tea.",
     "reviews": [
@@ -3943,8 +3943,8 @@
     "website": "https://www.bonniesbrooklyn.com/",
     "instagram_handle": "bonniesbrooklyn",
     "tags": [
-      "restaurant",
-      "cantonese restaurant"
+      "cantonese restaurant",
+      "restaurant"
     ],
     "description": "Elevated Chinese dishes, cocktails, and wines offered in a casual restaurant.",
     "reviews": [
@@ -3981,8 +3981,8 @@
     "website": "https://www.kijitorabrooklyn.com/",
     "instagram_handle": null,
     "tags": [
-      "coffee shop",
-      "cafe"
+      "cafe",
+      "coffee shop"
     ],
     "description": "4.6\n(179)\n·$1–10",
     "reviews": [
@@ -4126,10 +4126,10 @@
     "website": "https://winsonbrooklyn.com/",
     "instagram_handle": null,
     "tags": [
-      "asian",
       "taiwanese restaurant",
-      "restaurant",
+      "asian",
       "american",
+      "restaurant",
       "taiwanese"
     ],
     "description": "Casual spot for contemporary Taiwanese-American favorites, including buns, noodles, and salads.",
@@ -4167,11 +4167,11 @@
     "website": "https://www.russanddaughters.com/",
     "instagram_handle": "russanddaughters",
     "tags": [
-      "deli",
-      "restaurant",
-      "bagel shop",
       "bakery",
-      "american"
+      "deli",
+      "american",
+      "bagel shop",
+      "restaurant"
     ],
     "description": "Family-owned shop offering high-end smoked fish, caviar & New York-style specialty foods since 1914.",
     "reviews": [
@@ -4314,9 +4314,9 @@
     "website": "https://www.olioepiu.com/",
     "instagram_handle": "olioepiu",
     "tags": [
-      "italian restaurant",
       "italian",
-      "restaurant"
+      "restaurant",
+      "italian restaurant"
     ],
     "description": "Naples meets NYC at this trattoria with thin-crust pizza, Italian wines & ample sidewalk seating.",
     "reviews": [
@@ -4353,8 +4353,8 @@
     "website": "http://www.rakunyc.com/",
     "instagram_handle": "rakunyc",
     "tags": [
-      "japanese restaurant",
       "japanese",
+      "japanese restaurant",
       "restaurant"
     ],
     "description": "Udon specialist offering noodle soups and other Japanese bites with a streamlined interior.",
@@ -4401,9 +4401,9 @@
     "website": "https://www.carbonenewyork.com/?utm_medium=Click&utm_source=GoogleMyBusiness",
     "instagram_handle": "majorfoodgroup",
     "tags": [
-      "italian restaurant",
       "italian",
-      "restaurant"
+      "restaurant",
+      "italian restaurant"
     ],
     "description": "High-end takes on red-sauce fare await at this A-lister Italian restaurant in a retro-glam space.",
     "reviews": [
@@ -4465,8 +4465,8 @@
     "instagram_handle": null,
     "tags": [
       "thai",
-      "thai restaurant",
-      "restaurant"
+      "restaurant",
+      "thai restaurant"
     ],
     "description": "4.8\n(2,248)\n·$30–50",
     "reviews": [
@@ -4496,8 +4496,8 @@
     "website": "http://www.sakebardecibel.com/",
     "instagram_handle": "sakebar.decibel",
     "tags": [
-      "japanese",
-      "bar"
+      "bar",
+      "japanese"
     ],
     "description": "Underground sake bar offering a large list of varietals along with Japanese snacks.",
     "reviews": [
@@ -4557,8 +4557,8 @@
     "website": "http://www.chinesetuxedo.com/",
     "instagram_handle": null,
     "tags": [
-      "chinese restaurant",
-      "restaurant"
+      "restaurant",
+      "chinese restaurant"
     ],
     "description": "Two-story spot in a former opera house, offering contemporary Chinese dishes & stylish touches.",
     "reviews": [
@@ -4625,8 +4625,8 @@
     "website": "http://acrenyc.com/",
     "instagram_handle": "acre_nyc",
     "tags": [
-      "japanese restaurant",
       "japanese",
+      "japanese restaurant",
       "restaurant"
     ],
     "description": "Health-conscious, Japanese-influenced fare served in an industrial-chic destination with a terrace.",
@@ -4701,8 +4701,8 @@
     "website": "https://littleisland.org/",
     "instagram_handle": "littleislandnyc",
     "tags": [
-      "park",
-      "nature"
+      "nature",
+      "park"
     ],
     "description": "Island park with a striking stilt design, featuring flower beds & shows at a waterside amphitheater.",
     "reviews": [
@@ -4739,10 +4739,10 @@
     "website": "http://kettl.co/",
     "instagram_handle": null,
     "tags": [
-      "tea house",
       "bakery",
+      "cafe",
       "restaurant",
-      "cafe"
+      "tea house"
     ],
     "description": "Tea house·",
     "reviews": [
@@ -4775,9 +4775,9 @@
     "website": "https://www.roundkbysol.com/",
     "instagram_handle": "roundk_by_sol",
     "tags": [
-      "bar",
+      "cafe",
       "restaurant",
-      "cafe"
+      "bar"
     ],
     "description": "Narrow, offbeat cafe with a vintage ambiance providing latte art, house-roasted coffee & light fare.",
     "reviews": [
@@ -4896,9 +4896,9 @@
     "website": "https://jeans.nyc/",
     "instagram_handle": "jeanslafayette",
     "tags": [
-      "restaurant",
       "bar",
-      "night_club"
+      "night_club",
+      "restaurant"
     ],
     "description": "4.3\n(323)\n·$50–100",
     "reviews": [
@@ -5093,8 +5093,8 @@
     "instagram_handle": "Esquire",
     "tags": [
       "bar",
-      "french",
-      "restaurant"
+      "restaurant",
+      "french"
     ],
     "description": "Theatrical evocation of Paris featuring bistro food & high-energy atmospherics from a chic crowd.",
     "reviews": [
@@ -5161,9 +5161,9 @@
     "tags": [
       "asian",
       "eclectic",
+      "italian",
       "restaurant",
-      "japanese restaurant",
-      "italian"
+      "japanese restaurant"
     ],
     "description": "Laid-back restaurant with sidewalk seating serving creative cocktails & Japanese-Italian dishes.",
     "reviews": [
@@ -5200,8 +5200,8 @@
     "website": null,
     "instagram_handle": null,
     "tags": [
-      "tea house",
-      "shop"
+      "shop",
+      "tea house"
     ],
     "description": "\nDine-in\n·\n\nTakeout\n·\n\nDelivery\n",
     "reviews": [
@@ -5234,9 +5234,9 @@
     "website": "http://www.postermuseum.com/",
     "instagram_handle": "shopify",
     "tags": [
-      "poster store",
       "culture",
-      "shop"
+      "shop",
+      "poster store"
     ],
     "description": "Narrow retail gallery densely packed with 1000s of vintage posters & prints from around the world.",
     "reviews": [
@@ -5269,10 +5269,10 @@
     "website": "https://www.oasesnyc.com/",
     "instagram_handle": "oasesnyc",
     "tags": [
-      "bar",
+      "cafe",
       "new american restaurant",
       "restaurant",
-      "cafe"
+      "bar"
     ],
     "description": "3.9\n(64)\n·$20–30",
     "reviews": [
@@ -5302,11 +5302,11 @@
     "website": "http://www.pdfnyc.com/",
     "instagram_handle": "pdfbk",
     "tags": [
-      "restaurant",
-      "spanish",
-      "bar",
+      "wine bar",
       "portuguese",
-      "wine bar"
+      "bar",
+      "spanish",
+      "restaurant"
     ],
     "description": "Trendy wine bar with rustic-chic decor, serving carefully sourced wines & small plates.",
     "reviews": [
@@ -5339,8 +5339,8 @@
     "website": "http://gnocchinyc.com/",
     "instagram_handle": "gnocchinyc",
     "tags": [
-      "italian restaurant",
-      "restaurant"
+      "restaurant",
+      "italian restaurant"
     ],
     "description": "4.2\n(387)\n·$10–20",
     "reviews": [
@@ -5374,8 +5374,8 @@
     "instagram_handle": "lamercerieny",
     "tags": [
       "bar",
-      "french",
-      "restaurant"
+      "restaurant",
+      "french"
     ],
     "description": "4.2\n(1,470)\n·$50–100",
     "reviews": [
@@ -5574,8 +5574,8 @@
     "website": "https://www.kisaus.com/",
     "instagram_handle": "kisarestaurant",
     "tags": [
-      "korean restaurant",
       "korean",
+      "korean restaurant",
       "restaurant"
     ],
     "description": "4.6\n(322)\n·$30–50",
@@ -5653,8 +5653,8 @@
     "tags": [
       "bar",
       "thai",
-      "thai restaurant",
-      "restaurant"
+      "restaurant",
+      "thai restaurant"
     ],
     "description": "4.6\n(415)\n·$100+",
     "reviews": [
@@ -5691,8 +5691,8 @@
     "website": "http://devocion.com/",
     "instagram_handle": "devocionusa",
     "tags": [
-      "coffee shop",
-      "cafe"
+      "cafe",
+      "coffee shop"
     ],
     "description": "Carefully sourced Colombian coffee served in a well-lit, brick-lined space with leather sofas.",
     "reviews": [
@@ -5725,9 +5725,9 @@
     "website": "https://www.uluhny.com/",
     "instagram_handle": "uluh.ny",
     "tags": [
+      "sichuan restaurant",
       "chinese",
-      "restaurant",
-      "sichuan restaurant"
+      "restaurant"
     ],
     "description": "Warm eatery and teahouse for Chinese fare, from Peking duck to Shanghai dumplings.",
     "reviews": [
@@ -5765,8 +5765,8 @@
     "instagram_handle": null,
     "tags": [
       "bar",
-      "restaurant",
-      "japanese grocery store"
+      "japanese grocery store",
+      "restaurant"
     ],
     "description": "Japanese grocery store·",
     "reviews": [
@@ -5863,8 +5863,8 @@
     "website": "http://www.aristonflowers.com/",
     "instagram_handle": null,
     "tags": [
-      "coffee shop",
-      "cafe"
+      "cafe",
+      "coffee shop"
     ],
     "description": "4.6\n(427)\n·$10–20",
     "reviews": [
@@ -5898,9 +5898,9 @@
     "instagram_handle": "dantenewyorkcity",
     "tags": [
       "bar",
-      "italian restaurant",
+      "cafe",
       "restaurant",
-      "cafe"
+      "italian restaurant"
     ],
     "description": "Legendary circa-1915 cafe serving small plates & cocktails in an updated historic setting.",
     "reviews": [
@@ -5933,8 +5933,8 @@
     "website": "http://www.partnerscoffee.com/",
     "instagram_handle": "partnerscoffee",
     "tags": [
-      "coffee shop",
-      "cafe"
+      "cafe",
+      "coffee shop"
     ],
     "description": "Chic artisanal operation offering espressos & teas, plus brewing equipment & classes.",
     "reviews": [
@@ -6001,8 +6001,8 @@
     "website": "https://wahfungno1fastfood.site/",
     "instagram_handle": null,
     "tags": [
-      "chinese restaurant",
-      "restaurant"
+      "restaurant",
+      "chinese restaurant"
     ],
     "description": "Casual Chinese restaurant serving street-style food, with roast pork as its speciality.",
     "reviews": [
@@ -6243,8 +6243,8 @@
     "website": "http://www.remi43.com/",
     "instagram_handle": null,
     "tags": [
-      "coffee shop",
-      "cafe"
+      "cafe",
+      "coffee shop"
     ],
     "description": "Trendy cafe & flower shop offering coffee, pastries, cut flowers, bouquets & plants.",
     "reviews": [
@@ -6277,12 +6277,12 @@
     "website": "http://bibbleandsip.com/",
     "instagram_handle": "bibbleandsip",
     "tags": [
-      "coffee",
-      "dessert",
-      "tea",
-      "coffee_shop",
       "bakery",
-      "cafe"
+      "dessert",
+      "coffee_shop",
+      "cafe",
+      "tea",
+      "coffee"
     ],
     "description": "Bakery & coffeehouse serving upscale coffees, teas & a selection of housemade baked goods & syrups.",
     "reviews": [
@@ -6413,9 +6413,9 @@
     "instagram_handle": "wix",
     "tags": [
       "bar",
+      "cafe",
       "brunch restaurant",
-      "restaurant",
-      "cafe"
+      "restaurant"
     ],
     "description": "Easygoing hangout offering brunch staples, sandwiches & açaí bowls, plus coffee, cocktails & wine.",
     "reviews": [
@@ -6483,9 +6483,9 @@
     "instagram_handle": "wayla.nyc",
     "tags": [
       "nature",
-      "thai",
       "thai restaurant",
-      "restaurant"
+      "restaurant",
+      "thai"
     ],
     "description": "Homestyle Thai fare inspired by the markets of Bangkok is served in a stylish space with a patio.",
     "reviews": [
@@ -6559,8 +6559,8 @@
     "website": "http://c-asincharlie.com/",
     "instagram_handle": "c.asincharlie",
     "tags": [
-      "korean restaurant",
       "korean",
+      "korean restaurant",
       "restaurant"
     ],
     "description": "4.8\n(614)\n·$30–50",
@@ -6640,10 +6640,10 @@
     "website": "http://www.spotdessertbar.com/",
     "instagram_handle": "spotdessertbar",
     "tags": [
+      "cafe",
       "dessert restaurant",
       "bakery",
-      "restaurant",
-      "cafe"
+      "restaurant"
     ],
     "description": "Trendy outpost mixing Asian elements like green tea & yuzu into cookies, cakes & boba drinks.",
     "reviews": [
@@ -6677,8 +6677,8 @@
     "instagram_handle": null,
     "tags": [
       "bar",
-      "cocktail bar",
-      "night_club"
+      "night_club",
+      "cocktail bar"
     ],
     "description": "4.3\n(244)\n·$30–50",
     "reviews": [
@@ -6716,9 +6716,9 @@
     "instagram_handle": null,
     "tags": [
       "bar",
+      "seafood",
       "oyster bar restaurant",
-      "restaurant",
-      "seafood"
+      "restaurant"
     ],
     "description": "Oysters, cocktails & small plates in a New Orleans-styled setting with an atmospheric garden.",
     "reviews": [
@@ -6841,8 +6841,8 @@
     "website": "http://www.noodle5888.com/",
     "instagram_handle": null,
     "tags": [
-      "chinese restaurant",
-      "restaurant"
+      "restaurant",
+      "chinese restaurant"
     ],
     "description": "No-frills Chinese eatery known for hand-pulled noodles served with a range of meat, fish & broth.",
     "reviews": [
@@ -7013,9 +7013,9 @@
     "website": "https://www.somewherenowherenyc.com/",
     "instagram_handle": "swnwnyc",
     "tags": [
-      "night_club",
       "bar",
       "night club",
+      "night_club",
       "restaurant"
     ],
     "description": "3.5\n(1,335)\n·$100+",
@@ -7042,8 +7042,8 @@
     "website": "https://www.nycgovparks.org/parks/washington-square-park",
     "instagram_handle": null,
     "tags": [
-      "park",
-      "nature"
+      "nature",
+      "park"
     ],
     "description": "Historic Greenwich Village concrete-&-green park known for its stately arch & prime people watching.",
     "reviews": [
@@ -7111,9 +7111,9 @@
     "website": "http://www.cultureespresso.com/",
     "instagram_handle": "cultureespresso",
     "tags": [
+      "cafe",
       "bakery",
-      "coffee shop",
-      "cafe"
+      "coffee shop"
     ],
     "description": "Tiny, art-adorned coffeehouse pairing its brews with baked goods, sandwiches & a local vibe.",
     "reviews": [
@@ -7146,8 +7146,8 @@
     "website": "https://www.grandcentralterminal.com/",
     "instagram_handle": "grandcentralnyc",
     "tags": [
-      "destination",
-      "train depot"
+      "train depot",
+      "destination"
     ],
     "description": "4.8\n(18,312)",
     "reviews": [

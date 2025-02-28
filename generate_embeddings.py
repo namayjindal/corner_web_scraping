@@ -5,12 +5,15 @@ import psycopg2
 import pandas as pd
 import time
 import re
+import hashlib
 from psycopg2.extras import execute_batch
 from openai import OpenAI
 from datetime import datetime
 from dotenv import load_dotenv
 import traceback
-import hashlib
+
+# Import the location extraction functionality
+from location_extraction import extract_location_from_query, get_adjacent_neighborhoods
 
 # Load environment variables
 load_dotenv()
@@ -533,11 +536,30 @@ class EmbeddingGenerator:
             logger.error(traceback.format_exc())
             return 0
     
-    def test_vector_search(self, query, limit=5):
-        """Test vector search to validate embeddings"""
+    def search_places_with_location(self, query, neighborhood=None, limit=5, location_boost=1.5):
+        """
+        Enhanced search combining semantic similarity with location filtering
+        
+        Args:
+            query: The search query
+            neighborhood: Optional specific neighborhood to filter by
+            limit: Maximum number of results to return
+            location_boost: Boost factor for matching neighborhood
+            
+        Returns:
+            List of matching places
+        """
         if not self.has_pgvector:
-            logger.warning("pgvector extension not available, cannot test vector search")
+            logger.warning("pgvector extension not available, cannot perform search")
             return []
+        
+        # Extract location from query if not explicitly provided
+        if not neighborhood:
+            clean_query, extracted_neighborhood = extract_location_from_query(query)
+            if extracted_neighborhood:
+                neighborhood = extracted_neighborhood
+                query = clean_query  # Use the cleaned query without location
+                logger.info(f"Extracted location '{neighborhood}' from query. Modified query: '{query}'")
         
         conn, cur = self._connect_db()
         try:
@@ -545,31 +567,146 @@ class EmbeddingGenerator:
             query_embedding, _ = self.generate_embedding(query)
             
             if not query_embedding:
-                logger.error("Failed to generate embedding for test query")
+                logger.error("Failed to generate embedding for search query")
                 return []
             
-            # Perform vector search
-            search_query = """
-            SELECT p.id, p.name, p.neighborhood, p.tags, p.price_range,
-                   1 - (e.embedding <=> %s::vector) as similarity
-            FROM places p
-            JOIN embeddings e ON p.id = e.place_id
-            ORDER BY similarity DESC
-            LIMIT %s
-            """
+            # If neighborhood specified, use location-boosted search
+            if neighborhood:
+                # Query with location boost for places in the target neighborhood
+                search_query = """
+                SELECT 
+                    p.id, p.name, p.neighborhood, p.tags, p.price_range,
+                    p.combined_description,
+                    CASE 
+                        WHEN p.neighborhood ILIKE %s THEN (1 - (e.embedding <=> %s::vector)) * %s
+                        ELSE 1 - (e.embedding <=> %s::vector)
+                    END as adjusted_similarity
+                FROM places p
+                JOIN embeddings e ON p.id = e.place_id
+                ORDER BY adjusted_similarity DESC
+                LIMIT %s
+                """
+                
+                neighborhood_pattern = f'%{neighborhood}%'
+                
+                cur.execute(search_query, (
+                    neighborhood_pattern, 
+                    query_embedding, 
+                    location_boost,
+                    query_embedding,
+                    limit
+                ))
+            else:
+                # Standard vector search without location filtering
+                search_query = """
+                SELECT p.id, p.name, p.neighborhood, p.tags, p.price_range,
+                       p.combined_description,
+                       1 - (e.embedding <=> %s::vector) as similarity
+                FROM places p
+                JOIN embeddings e ON p.id = e.place_id
+                ORDER BY similarity DESC
+                LIMIT %s
+                """
+                
+                cur.execute(search_query, (query_embedding, limit))
             
-            cur.execute(search_query, (query_embedding, limit))
             results = cur.fetchall()
+            
+            # If we got very few results with neighborhood filtering, try expanding to adjacent neighborhoods
+            if neighborhood and len(results) < 3:
+                logger.info(f"Few results ({len(results)}) with neighborhood filter '{neighborhood}'. Expanding to adjacent neighborhoods.")
+                
+                # Try adjacent neighborhoods from our mapping
+                adjacent_neighborhoods = get_adjacent_neighborhoods(neighborhood)
+                if adjacent_neighborhoods:
+                    adjacent_results = []
+                    for adjacent in adjacent_neighborhoods:
+                        # Query with adjacent neighborhood
+                        adjacent_pattern = f'%{adjacent}%'
+                        cur.execute(search_query, (
+                            adjacent_pattern, 
+                            query_embedding, 
+                            1.2,  # Lower boost for adjacent neighborhoods
+                            query_embedding,
+                            3  # Limit per adjacent neighborhood
+                        ))
+                        adjacent_results.extend(cur.fetchall())
+                    
+                    # Combine results, prioritizing any that were in the original results
+                    all_ids = set(r[0] for r in results)  # IDs from original results
+                    
+                    # Add results from adjacent neighborhoods that weren't in original
+                    for res in adjacent_results:
+                        if res[0] not in all_ids:
+                            results.append(res)
+                            all_ids.add(res[0])
+                
+                # If still too few, fall back to unfiltered search 
+                if len(results) < 3:
+                    logger.info(f"Still too few results with adjacent neighborhoods. Trying without location filter.")
+                    
+                    # Query without location filter
+                    cur.execute(
+                        """
+                        SELECT p.id, p.name, p.neighborhood, p.tags, p.price_range,
+                               p.combined_description,
+                               1 - (e.embedding <=> %s::vector) as similarity
+                        FROM places p
+                        JOIN embeddings e ON p.id = e.place_id
+                        ORDER BY similarity DESC
+                        LIMIT %s
+                        """, 
+                        (query_embedding, limit)
+                    )
+                    unfiltered_results = cur.fetchall()
+                    
+                    # Add unfiltered results that aren't already in our results
+                    for res in unfiltered_results:
+                        if res[0] not in all_ids:
+                            results.append(res)
+            
+            # Sort results by similarity (or adjusted_similarity)
+            if neighborhood:
+                results.sort(key=lambda x: x[6], reverse=True)  # Sort by adjusted_similarity
+            else:
+                results.sort(key=lambda x: x[6], reverse=True)  # Sort by similarity
+            
+            # Limit to the requested number of results
+            results = results[:limit]
             
             return results
             
         except Exception as e:
-            logger.error(f"Error testing vector search: {str(e)}")
+            logger.error(f"Error searching places: {str(e)}")
+            logger.error(traceback.format_exc())
             conn.rollback()
             return []
         finally:
             cur.close()
             conn.close()
+    
+    def test_vector_search(self, query, limit=5):
+        """Test vector search with a sample query"""
+        logger.info(f"Testing vector search with query: '{query}'")
+        
+        # First try with location extraction
+        clean_query, location = extract_location_from_query(query)
+        if location:
+            logger.info(f"Extracted location '{location}' from query. Modified query: '{clean_query}'")
+            results = self.search_places_with_location(clean_query, neighborhood=location, limit=limit)
+        else:
+            results = self.search_places_with_location(query, limit=limit)
+            
+        if not results:
+            logger.warning("No results found.")
+            return []
+            
+        logger.info(f"Found {len(results)} results:")
+        for i, result in enumerate(results, 1):
+            id, name, neighborhood, tags, price, desc, similarity = result
+            logger.info(f"{i}. {name} ({neighborhood}) - {similarity:.4f}")
+            
+        return results
     
     def add_missing_metadata_column(self):
         """Add metadata JSONB column if it doesn't exist"""
@@ -597,13 +734,14 @@ class EmbeddingGenerator:
             cur.close()
             conn.close()
 
+
 def main():
     # Database configuration
     db_config = {
         "dbname": "corner_db",
-        "user": "namayjindal",  # Your username - adjust if needed
-        "password": "",         # Usually empty on macOS
-        "host": "localhost"
+        "user": os.getenv("DB_USER", "namayjindal"),  # Configurable via environment variable
+        "password": os.getenv("DB_PASSWORD", ""),  # Configurable via environment variable
+        "host": os.getenv("DB_HOST", "localhost")  # Configurable via environment variable
     }
     
     generator = EmbeddingGenerator(db_config)
@@ -615,7 +753,7 @@ def main():
     tokens_used = generator.process_all_places()
     
     # Test vector search with various queries
-    logger.info("Testing vector search...")
+    logger.info("\nTesting vector search functionality...")
     
     test_queries = [
         "cozy coffee shop in Brooklyn",
@@ -625,21 +763,13 @@ def main():
         "cocktail bar with unique drinks",
         "restaurants near Soho with outdoor seating",
         "affordable brunch spots in East Village",
-        "Japanese restaurants with good vegetarian options",
-        "Matcha"
+        "Japanese restaurants with good vegetarian options"
     ]
     
     for query in test_queries:
-        logger.info(f"\nTesting query: '{query}'")
-        results = generator.test_vector_search(query, limit=3)
-        
-        if results:
-            logger.info("Top results:")
-            for i, (id, name, neighborhood, tags, price, similarity) in enumerate(results, 1):
-                tags_formatted = ", ".join(generator.parse_tags(tags)) if tags else "N/A"
-                logger.info(f"{i}. {name} ({neighborhood}) - ${price} - Tags: {tags_formatted} - Similarity: {similarity:.4f}")
-        else:
-            logger.info("No results found.")
+        generator.test_vector_search(query, limit=3)
+        print("-" * 40)
+
 
 if __name__ == "__main__":
     main()
