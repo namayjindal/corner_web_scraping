@@ -67,6 +67,215 @@ class EmbeddingGenerator:
         finally:
             cur.close()
             conn.close()
+
+    def clean_price_range(self, price_range):
+        """Clean and standardize price range format"""
+        if not price_range:
+            return None
+            
+        # If already a string, clean it
+        if isinstance(price_range, str):
+            # Remove Unicode characters
+            price = price_range.replace('\u2013', '-')  # en dash
+            price = price.replace('\u2014', '-')  # em dash
+            price = price.replace('\u201c', '"')  # left double quote
+            price = price.replace('\u201d', '"')  # right double quote
+            price = price.replace('\u2018', "'")  # left single quote
+            price = price.replace('\u2019', "'")  # right single quote
+            
+            # Standardize format
+            price = re.sub(r'\s+', ' ', price).strip()  # Remove extra spaces
+            
+            return pricep
+        
+        # If it's a number, format it
+        if isinstance(price_range, (int, float)):
+            return f"${price_range}"
+        
+        return None
+
+    def process_price_range(self, price_range):
+        """Process and add semantic meaning to price range indicators"""
+        if not price_range:
+            return None
+            
+        # Clean the price range
+        price = self.clean_price_range(price_range)
+        if not price:
+            return None
+        
+        # Extract dollar signs if present
+        dollar_count = price.count('$')
+        if dollar_count > 0:
+            price_level = dollar_count
+        else:
+            # Try to extract numerical ranges (e.g. $10-20, $30-50)
+            match = re.search(r'\$?(\d+)(?:[^\d]+)(\d+)', price)
+            if match:
+                low, high = int(match.group(1)), int(match.group(2))
+                avg_price = (low + high) / 2
+                if avg_price < 15:
+                    price_level = 1
+                elif avg_price < 30:
+                    price_level = 2
+                elif avg_price < 60:
+                    price_level = 3
+                else:
+                    price_level = 4
+            else:
+                # Try to extract single values
+                match = re.search(r'\$?(\d+)', price)
+                if match:
+                    value = int(match.group(1))
+                    if value < 15:
+                        price_level = 1
+                    elif value < 30:
+                        price_level = 2
+                    elif value < 60:
+                        price_level = 3
+                    else:
+                        price_level = 4
+                else:
+                    # If we can't determine, assume mid-range
+                    price_level = 2
+        
+        # Map price levels to descriptive text
+        price_descriptions = {
+            1: "Budget-friendly, inexpensive, affordable",
+            2: "Moderately priced, mid-range",
+            3: "Higher-end, upscale, expensive",
+            4: "Fine dining, premium, luxury, high-end"
+        }
+        
+        return {
+            "original": price,
+            "level": price_level,
+            "description": price_descriptions.get(price_level, "")
+        }
+
+    def process_business_hours(self, hours_data):
+        """Process business hours to extract meaningful patterns"""
+        if not hours_data:
+            return None
+            
+        parsed_hours = self.parse_hours(hours_data)
+        if not parsed_hours:
+            return None
+        
+        hour_patterns = {
+            "open_late": False,
+            "open_early": False,
+            "open_weekends": False,
+            "open_breakfast": False,
+            "open_lunch": False,
+            "open_dinner": False,
+            "open_24h": False,
+            "closed_mondays": False,
+            "days_open": []
+        }
+        
+        # Convert hours to a standardized format for analysis
+        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        day_abbrevs = {"Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday", "Thu": "Thursday", 
+                    "Fri": "Friday", "Sat": "Saturday", "Sun": "Sunday"}
+        
+        if isinstance(parsed_hours, dict):
+            for day, hours_str in parsed_hours.items():
+                if hours_str == "Closed":
+                    continue
+                    
+                # Standardize day name
+                day_name = day
+                for abbrev, full_name in day_abbrevs.items():
+                    if abbrev in day or abbrev.lower() in day.lower():
+                        day_name = full_name
+                        break
+                
+                hour_patterns["days_open"].append(day_name)
+                
+                # Check for specific patterns in hours
+                if "24" in hours_str:
+                    hour_patterns["open_24h"] = True
+                    continue
+                    
+                # Parse actual opening and closing times
+                time_patterns = [
+                    # 12-hour format: 10 AM to 10 PM
+                    r'(\d+(?::\d+)?)\s*([aApP][mM])\s*(?:to|[-–—])\s*(\d+(?::\d+)?)\s*([aApP][mM])',
+                    # 24-hour format: 10:00-22:00
+                    r'(\d+):(\d+)\s*(?:to|[-–—])\s*(\d+):(\d+)',
+                    # Simple format: 10-22
+                    r'(\d+)\s*(?:to|[-–—])\s*(\d+)'
+                ]
+                
+                for pattern in time_patterns:
+                    match = re.search(pattern, hours_str)
+                    if match:
+                        # 12-hour format
+                        if len(match.groups()) == 4 and match.group(2) and match.group(4):
+                            open_hour = int(match.group(1).split(':')[0])
+                            close_hour = int(match.group(3).split(':')[0])
+                            
+                            # Adjust for PM
+                            if match.group(2).lower() == 'pm' and open_hour < 12:
+                                open_hour += 12
+                            if match.group(4).lower() == 'pm' and close_hour < 12:
+                                close_hour += 12
+                            
+                        # 24-hour format
+                        elif len(match.groups()) == 4:
+                            open_hour = int(match.group(1))
+                            close_hour = int(match.group(3))
+                            
+                        # Simple format
+                        else:
+                            open_hour = int(match.group(1))
+                            close_hour = int(match.group(2))
+                        
+                        # Check time patterns
+                        if open_hour <= 8:
+                            hour_patterns["open_early"] = True
+                        if open_hour <= 10:
+                            hour_patterns["open_breakfast"] = True
+                        if open_hour <= 12 and close_hour >= 14:
+                            hour_patterns["open_lunch"] = True
+                        if close_hour >= 17:
+                            hour_patterns["open_dinner"] = True
+                        if close_hour >= 22 or close_hour <= 4:  # Late night or early morning closing
+                            hour_patterns["open_late"] = True
+                        break
+        
+        # Check weekend operation
+        if "Saturday" in hour_patterns["days_open"] or "Sunday" in hour_patterns["days_open"]:
+            hour_patterns["open_weekends"] = True
+        
+        # Check if closed Mondays
+        hour_patterns["closed_mondays"] = "Monday" not in hour_patterns["days_open"]
+        
+        # Generate descriptive text
+        descriptions = []
+        if hour_patterns["open_early"]:
+            descriptions.append("Opens early")
+        if hour_patterns["open_late"]:
+            descriptions.append("Open late")
+        if hour_patterns["open_breakfast"]:
+            descriptions.append("Serves breakfast")
+        if hour_patterns["open_lunch"]:
+            descriptions.append("Open for lunch")
+        if hour_patterns["open_dinner"]:
+            descriptions.append("Open for dinner")
+        if hour_patterns["open_24h"]:
+            descriptions.append("Open 24 hours")
+        if hour_patterns["open_weekends"]:
+            descriptions.append("Open on weekends")
+        if hour_patterns["closed_mondays"]:
+            descriptions.append("Closed on Mondays")
+        
+        return {
+            "original": parsed_hours,
+            "patterns": hour_patterns,
+            "description": ", ".join(descriptions)
+        }
         
     def fetch_places_needing_embeddings(self):
         """Fetch places that need embeddings generated or updated"""
@@ -268,11 +477,27 @@ class EmbeddingGenerator:
         if neighborhood:
             content_parts.append(f"Neighborhood: {neighborhood}")
         
-        if price_range:
-            content_parts.append(f"Price Range: {price_range}")
+        # Process price range
+        processed_price = self.process_price_range(price_range)
+        if processed_price:
+            content_parts.append(f"Price Range: {processed_price['original']}")
+            content_parts.append(f"Price Category: {processed_price['description']}")
         
         if address:
             content_parts.append(f"Address: {address}")
+        
+        # Process hours
+        processed_hours = self.process_business_hours(hours)
+        if processed_hours:
+            hours_text = []
+            if isinstance(processed_hours['original'], dict):
+                for day, time in processed_hours['original'].items():
+                    hours_text.append(f"{day}: {time}")
+                if hours_text:
+                    content_parts.append(f"Hours: {', '.join(hours_text)}")
+            
+            if processed_hours['description']:
+                content_parts.append(f"Hours Info: {processed_hours['description']}")
         
         # Add description if available
         if description:
@@ -284,17 +509,6 @@ class EmbeddingGenerator:
         tags = self.parse_tags(tags_data)
         if tags:
             content_parts.append(f"Tags: {', '.join(tags)}")
-        
-        # Add hours if available
-        parsed_hours = self.parse_hours(hours)
-        if isinstance(parsed_hours, dict):
-            hours_text = []
-            for day, time in parsed_hours.items():
-                hours_text.append(f"{day}: {time}")
-            if hours_text:
-                content_parts.append(f"Hours: {', '.join(hours_text)}")
-        elif isinstance(parsed_hours, str) and len(parsed_hours) > 5:
-            content_parts.append(f"Hours: {parsed_hours}")
         
         # Fetch and add Resy data
         resy_data = self.fetch_resy_data(corner_id)
@@ -739,9 +953,9 @@ def main():
     # Database configuration
     db_config = {
         "dbname": "corner_db",
-        "user": os.getenv("DB_USER", "namayjindal"),  # Configurable via environment variable
-        "password": os.getenv("DB_PASSWORD", ""),  # Configurable via environment variable
-        "host": os.getenv("DB_HOST", "localhost")  # Configurable via environment variable
+        "user": os.getenv("DB_USER", "namayjindal"),
+        "password": os.getenv("DB_PASSWORD", ""),
+        "host": os.getenv("DB_HOST", "localhost")
     }
     
     generator = EmbeddingGenerator(db_config)
@@ -752,13 +966,37 @@ def main():
     # Process all places
     tokens_used = generator.process_all_places()
     
-    # Test vector search with various queries
+    # Test vector search with enhanced query set
     logger.info("\nTesting vector search functionality...")
     
     test_queries = [
+        # General location queries
         "cozy coffee shop in Brooklyn",
         "authentic thai food with good reviews",
         "romantic restaurant for date night in West Village",
+        
+        # Price-focused queries
+        "cheap eats in Chinatown",
+        "budget-friendly pizza",
+        "expensive fine dining",
+        "mid-range italian restaurant",
+        "affordable breakfast spots",
+        
+        # Hours-focused queries
+        "restaurants open late in East Village",
+        "breakfast places open early",
+        "cafes open on weekends",
+        "restaurants open for lunch on Mondays",
+        "dinner spots open until midnight",
+        "places for Sunday brunch",
+        
+        # Combined queries
+        "affordable Italian open late",
+        "upscale sushi bar open for lunch",
+        "cheap breakfast place open early in Brooklyn",
+        "mid-priced restaurants with outdoor seating open on Sundays",
+        
+        # Original queries
         "casual pizza place that's open late",
         "cocktail bar with unique drinks",
         "restaurants near Soho with outdoor seating",
@@ -769,7 +1007,6 @@ def main():
     for query in test_queries:
         generator.test_vector_search(query, limit=3)
         print("-" * 40)
-
 
 if __name__ == "__main__":
     main()
