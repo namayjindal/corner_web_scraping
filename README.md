@@ -23,7 +23,7 @@ Before running the script, make sure you have:
 
 1. Clone this repository:
    ```
-   git clone https://github.com/your-username/corner-project.git
+   git clone https://github.com/namayjindal/corner-project.git
    cd corner-project
    ```
 
@@ -128,7 +128,3 @@ After collecting the data, you might want to:
 1. Perform more advanced data analysis
 2. Create visualizations of the data
 3. Build a simple search interface using the vector embeddings
-
-## License
-
-This project is available for personal and educational use.
